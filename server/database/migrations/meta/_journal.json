@@ -1,0 +1,13 @@
+{
+  "version": "5",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1712096387285,
+      "tag": "0000_motionless_scarlet_witch",
+      "breakpoints": true
+    }
+  ]
+}
