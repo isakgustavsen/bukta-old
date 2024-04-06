@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const client = useKindeClient()
+// const client = useKindeClient()
 
 const links = ref([])
 
@@ -10,19 +10,19 @@ const links = ref([])
 
 
 // if(isAdmin?.value && isAdmin?.value.isGranted){
-  const query = groq`*[_type == 'homePage']{
+const query = groq`*[_type == 'homePage']{
+  'label': title,
+  'children': *[_type == 'contentPage' && references(^._id)]|order(title asc){
     'label': title,
+    'to': "/" + slug.current,
     'children': *[_type == 'contentPage' && references(^._id)]|order(title asc){
       'label': title,
-      'to': "/" + slug.current,
-      'children': *[_type == 'contentPage' && references(^._id)]|order(title asc){
-        'label': title,
-        'to': "/" + slug.current}
-    }
-  }`
+      'to': "/" + slug.current}
+  }
+}`
 
-  const { data: adminLinks } = await useSanityQuery(query)
-  links.value = adminLinks
+const { data: adminLinks } = await useSanityQuery(query)
+links.value = adminLinks
 // }
 // else{
 //   const query = groq`*[_type == 'homePage' && _id == '0b6bd09e-c564-49b1-bfe7-fd5701b11e24']{
@@ -64,7 +64,6 @@ const links = ref([])
 
       <UDashboardSidebar>
         <template #header>
-          <!-- Place anything you like here -->
           <UDashboardSearchButton />
         </template>
 
@@ -88,9 +87,5 @@ const links = ref([])
     </UDashboardPanel>
     <NuxtPage />
   </UDashboardLayout>
-  <ClientOnly>
-    <!-- <LazyUDashboardSearch :groups="groups" /> -->
-  </ClientOnly>
-
   <UNotifications />
 </template>
