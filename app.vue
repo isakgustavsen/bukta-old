@@ -3,9 +3,9 @@ const client = useKindeClient()
 
 const links = ref([])
 
-const {data: isAdmin} = await useAsyncData(async () => {
-  return (await client?.getPermission('admin')) ?? {}
-})
+// const {data: isAdmin} = await useAsyncData(async () => {
+//   return (await client?.getPermission('admin')) ?? {}
+// })
 
 
 
