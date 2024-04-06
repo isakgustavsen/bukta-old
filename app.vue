@@ -1,6 +1,16 @@
 <script setup lang="ts">
+const client = useKindeClient()
 
-const query = groq`*[_type == 'homePage']{
+const links = ref([])
+
+const {data: isAdmin} = await useAsyncData(async () => {
+  return (await client?.getPermission('admin')) ?? {}
+})
+
+
+
+if(isAdmin.value && isAdmin.value.isGranted){
+  const query = groq`*[_type == 'homePage']{
     'label': title,
     'children': *[_type == 'contentPage' && references(^._id)]|order(title asc){
       'label': title,
@@ -10,7 +20,25 @@ const query = groq`*[_type == 'homePage']{
         'to': "/" + slug.current}
     }
   }`
-const { data: links } = useSanityQuery(query)
+
+  const { data: adminLinks } = await useSanityQuery(query)
+  links.value = adminLinks
+}
+else{
+  const query = groq`*[_type == 'homePage' && _id == '0b6bd09e-c564-49b1-bfe7-fd5701b11e24']{
+    'label': title,
+    'children': *[_type == 'contentPage' && references(^._id)]|order(title asc){
+      'label': title,
+      'to': "/" + slug.current,
+      'children': *[_type == 'contentPage' && references(^._id)]|order(title asc){
+        'label': title,
+        'to': "/" + slug.current}
+    }
+  }`
+
+  let { data: linkArray } = await useSanityQuery(query)
+  links.value = linkArray
+}
 
 // const groups = [{
 //   key: 'users',
@@ -40,7 +68,7 @@ const { data: links } = useSanityQuery(query)
           <UDashboardSearchButton />
         </template>
 
-        <UDashboardSidebarLinks :links="links[0].children" />
+        <UDashboardSidebarLinks :links="links.value" />
 
         <UDivider />
 
