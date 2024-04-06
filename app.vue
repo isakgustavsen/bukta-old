@@ -9,7 +9,7 @@ const {data: isAdmin} = await useAsyncData(async () => {
 
 
 
-if(isAdmin.value && isAdmin.value.isGranted){
+if(isAdmin?.value && isAdmin?.value.isGranted){
   const query = groq`*[_type == 'homePage']{
     'label': title,
     'children': *[_type == 'contentPage' && references(^._id)]|order(title asc){
