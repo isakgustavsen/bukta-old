@@ -1,14 +1,10 @@
 <script setup lang="ts">
 
 const client = useKindeClient()
-const links = ref([])
+const links = []
 
-const {data: isAdmin} = await useAsyncData(async () => {
-  return (await client?.getPermission('admin')) ?? {};
-})
-
-if(isAdmin?.value?.isGranted){
-  const query = groq`*[_type == 'homePage']{
+async function fetchAdmin() {
+  const query = groq`*[_type == 'homePage' && _id == '1932d52c-4e4c-4127-845e-26d7f13c2dfe']{
     'label': title,
     'children': *[_type == 'contentPage' && references(^._id)]|order(title asc){
       'label': title,
@@ -19,9 +15,10 @@ if(isAdmin?.value?.isGranted){
     }
   }`
   const { data } = await useSanityQuery(query)
-  links.value = data
+  return data
 }
-else{
+
+async function fetchNavigation() {
   const query = groq`*[_type == 'homePage' && _id == '0b6bd09e-c564-49b1-bfe7-fd5701b11e24']{
     'label': title,
     'children': *[_type == 'contentPage' && references(^._id)]|order(title asc){
@@ -33,30 +30,48 @@ else{
     }
   }`
   const { data } = await useSanityQuery(query)
-  links.value = data
+  return data
 }
+
+const {data: isUser} = await useAsyncData(async () => {
+  return (await client?.getPermission('user')) ?? {}
+})
+
+const {data: isAdmin} = await useAsyncData(async () => {
+  return (await client?.getPermission('admin')) ?? {}
+})
+
+//Fetch navigation if user has access
+if(isUser.value.isGranted){
+  const res1 = await fetchNavigation()
+  links.push(res1.value[0])
+}
+if(isAdmin.value.isGranted){
+  const res = await fetchAdmin()
+  links.push(res.value[0])
+}
+
+
+
 
 </script>
 
 <template>
-  <UDashboardLayout>
-    <UDashboardPanel :width="400" :resizable="{ min: 200, max: 300 }" collapsible>
-      <UDashboardNavbar />
-
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
+    <!-- <UDashboardPanel :width="400" :resizable="{ min: 200, max: 300 }" collapsible>
+      <UDashboardNavbar>
+        <template #toggle>
+          <UDashboardNavbarToggle icon="i-heroicons-x-mark" />
+        </template>
+      </UDashboardNavbar>
       <UDashboardSidebar>
         <template #header>
           <UDashboardSearchButton />
         </template>
 
-        <UDashboardSidebarLinks :links="links.value[0].children" />
-        <div v-if="isAdmin?.isGranted">
-          <UDivider label="Admin" />
-          <UDashboardSidebarLinks :links="links.value[1].children" />
-        </div>
-
-        <UDivider />
-
-        <UDashboardSidebarLinks />
+        <UDashboardSidebarLinks :links="links" />
 
         <template #footer>
           <span v-if="$auth.loggedIn">
@@ -70,7 +85,7 @@ else{
         </template>
       </UDashboardSidebar>
     </UDashboardPanel>
-    <NuxtPage />
-  </UDashboardLayout>
-  <UNotifications />
+    <UDashboardPage>
+      <NuxtPage />
+    </UDashboardPage> -->
 </template>

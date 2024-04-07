@@ -1,17 +1,22 @@
 <template>
-  <main class="w-full">
-    <UPageHeader :title="data.title" />
-    <div class="mt-8 mx-16">
-      <SanityContent :blocks="data.content" />
-    </div>
-  </main>
+  <UDashboardPage>
+    <UDashboardPanel>
+      <UDashboardNavbar :title="data?.title" />
+      <UDashboardPanelContent>
+        <UPageBody prose>
+          <SanityContent :blocks="data?.content" />
+        </UPageBody>
+      </UDashboardPanelContent>
+    </UDashboardPanel>
+  </UDashboardPage>
 </template>
 
 <script setup lang="ts">
+import type { ContentPost } from '~/types'
 
 const query = groq`*[_type == "homePage"][0]{
   title,
   content
 }`
-const { data } = useSanityQuery(query)
+const { data } = useSanityQuery<ContentPost>(query)
 </script>

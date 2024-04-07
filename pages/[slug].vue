@@ -1,22 +1,28 @@
 <template>
-  <div class="w-full">
-    <UDashboardNavbar :title="data?.title" />
-    <UPageBody prose class="px-8">
-      <SanityContent :blocks="data?.content" />
-      <LazySanityFile v-if="data?.video" :asset-id="data.video.asset._ref">
-        <template #default="{ src }">
-          <video controls>
-            <source :src="src" type="video/mp4"/>
-            Your browser does not support the video tag.
-          </video>
-        </template>
-      </LazySanityFile>
-    </UPageBody>
-  </div>
+  <UDashboardPage>
+    <UDashboardPanel>
+      <UDashboardNavbar :title="data?.title" />
+      <UDashboardPanelContent>
+        <UPageBody prose>
+          <SanityContent :blocks="data?.content" />
+        </UPageBody>
+        <LazySanityFile v-if="data?.video" :asset-id="data.video.asset._ref">
+          <template #default="{ src }">
+            <video controls>
+              <source :src="src" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </template>
+        </LazySanityFile>
+      </UDashboardPanelContent>
+    </UDashboardPanel>
+  </UDashboardPage>
 </template>
 
 <script setup lang="ts">
 const route = useRoute()
+
+import type { ContentPost } from '~/types'
 
 definePageMeta({
   middleware: ['auth-logged-in']
@@ -28,6 +34,5 @@ const query = groq`*[_type == "contentPage" && slug.current == $slug][0] {
   video
 }`
 
-const { data } = useSanityQuery(query, { slug: route.params.slug })
-console.log(data)
+const { data } = useSanityQuery<ContentPost>(query, { slug: route.params.slug })
 </script>

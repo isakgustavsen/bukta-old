@@ -14,7 +14,7 @@ export default defineNuxtConfig({
       openAPI: true,
     },
   },
-  modules: ['@nuxt/ui', '@nuxtjs/kinde', '@nuxtjs/sanity'],
+  modules: ['@nuxt/ui', '@nuxtjs/kinde', '@nuxtjs/sanity', "@nuxt/image"],
   sanity: {
     projectId: 'azn1k8lx',
   },

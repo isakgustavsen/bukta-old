@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@nuxt/eslint-config": "^0.2.0",
+    "@nuxt/image": "^1.5.0",
     "@nuxtjs/kinde": "^0.1.9",
     "drizzle-kit": "^0.20.14",
     "eslint": "^8.57.0",
