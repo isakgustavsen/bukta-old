@@ -45,11 +45,11 @@ const {data: isAdmin} = await useAsyncData(async () => {
 })
 
 //Fetch navigation if user has access
-if(isUser.value.isGranted){
+if(isUser?.value.isGranted){
   const res1 = await fetchNavigation()
   links.push(res1.value[0])
 }
-if(isAdmin.value.isGranted){
+if(isAdmin?.value.isGranted){
   const res = await fetchAdmin()
   links.push(res.value[0])
 }
