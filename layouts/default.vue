@@ -44,18 +44,15 @@ const {data: isAdmin} = await useAsyncData(async () => {
   return (await client?.getPermission('admin')) ?? {}
 })
 
-//Fetch navigation if user has access
-if(isUser?.value.isGranted){
+// Fetch navigation if user has access
+if(isUser?.value?.isGranted){
   const res1 = await fetchNavigation()
   links.push(res1.value[0])
 }
-if(isAdmin?.value.isGranted){
+if(isAdmin?.value?.isGranted){
   const res = await fetchAdmin()
   links.push(res.value[0])
 }
-
-const defaultColors = ref(['green', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet'].map(color => ({ label: color, chip: color, click: () => appConfig.ui.primary = color })))
-const colors = computed(() => defaultColors.value.map(color => ({ ...color, active: appConfig.ui.primary === color.label })))
 </script>
 
 <template>
@@ -74,32 +71,23 @@ const colors = computed(() => defaultColors.value.map(color => ({ ...color, acti
 
         <UDashboardSidebarLinks :links="links" />
 
-        <UDivider />
-
-        <UDashboardSidebarLinks :links="[{ label: 'Colors', draggable: true, children: colors }]" @update:links="colors => defaultColors = colors" />
-
-        <div class="flex-1" />
-
-        <UDashboardSidebarLinks :links="footerLinks" />
-
-        <UDivider class="sticky bottom-0" />
-
         <template #footer>
-          <!-- ~/components/UserDropdown.vue -->
-          <UserDropdown />
+          <span v-if="$auth.loggedIn">
+            <UButton to="/api/logout" external>
+              Logout
+            </UButton>
+          </span>
+          <LoginLink v-else to="/api/login" external>
+            <UButton>Login</UButton>
+          </LoginLink>
         </template>
       </UDashboardSidebar>
     </UDashboardPanel>
 
     <slot />
 
-    <!-- ~/components/HelpSlideover.vue -->
-    <HelpSlideover />
-    <!-- ~/components/NotificationsSlideover.vue -->
-    <NotificationsSlideover />
-
     <ClientOnly>
-      <LazyUDashboardSearch :groups="groups" />
+      <LazyUDashboardSearch />
     </ClientOnly>
   </UDashboardLayout>
 </template>
