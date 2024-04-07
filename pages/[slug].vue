@@ -1,20 +1,20 @@
 <template>
-  <UDashboardPage>
+  <UDashboardPage prose>
     <UDashboardPanel>
       <UDashboardNavbar :title="data?.title" />
       <UDashboardPanelContent>
-        <UPageBody prose>
+        <UPageBody class="lg:max-w-2xl xl:max-w-5xl" prose>
           <SanityContent :blocks="data?.content" />
         </UPageBody>
-        <LazySanityFile v-if="data?.video" :asset-id="data.video.asset._ref">
-          <template #default="{ src }">
-            <video controls>
-              <source :src="src" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </template>
-        </LazySanityFile>
       </UDashboardPanelContent>
+      <LazySanityFile v-if="data?.video" :asset-id="data.video.asset._ref">
+        <template #default="{ src }">
+          <video controls>
+            <source :src="src" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </template>
+      </LazySanityFile>
     </UDashboardPanel>
   </UDashboardPage>
 </template>
