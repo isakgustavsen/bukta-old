@@ -3,7 +3,7 @@
     <UDashboardPanel>
       <UDashboardNavbar :title="data?.title" />
       <UDashboardPanelContent>
-        <UPageBody class="lg:max-w-2xl xl:max-w-5xl" prose>
+        <UPageBody class="lg:max-w-2xl xl:max-w-4xl" prose>
           <SanityContent :blocks="data?.content" />
         </UPageBody>
       </UDashboardPanelContent>
