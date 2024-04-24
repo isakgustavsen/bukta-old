@@ -25,7 +25,7 @@
                     </p>
                 </div>
             </UCarousel> -->
-            <SanityImage :asset-id="data?.gallery[0].asset._ref" auto="format" />
+            <!-- <SanityImage :asset-id="data?.gallery[0].asset._ref" auto="format" /> -->
         </UDashboardPanel>
     </UDashboardPage>
 </template>
