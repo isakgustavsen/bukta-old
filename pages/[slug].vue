@@ -6,7 +6,9 @@
         <UPageBody class="lg:max-w-2xl xl:max-w-4xl" prose>
           <SanityContent :blocks="data?.content" />
         </UPageBody>
+      
       </UDashboardPanelContent>
+      
       <LazySanityFile v-if="data?.video" :asset-id="data.video.asset._ref">
         <template #default="{ src }">
           <video controls>
@@ -15,6 +17,7 @@
           </video>
         </template>
       </LazySanityFile>
+      <UTable :rows="data.gallery" />
     </UDashboardPanel>
   </UDashboardPage>
 </template>
@@ -31,8 +34,10 @@ definePageMeta({
 const query = groq`*[_type == "contentPage" && slug.current == $slug][0] {
   title,
   content,
-  video
+  video,
+  gallery
 }`
 
 const { data } = useSanityQuery<ContentPost>(query, { slug: route.params.slug })
+console.log(data)
 </script>
